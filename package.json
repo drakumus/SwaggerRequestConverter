@@ -1,0 +1,23 @@
+{
+  "name": "swagger-form-to-json",
+  "version": "1.0.0",
+  "description": "A tool to convert Swagger 2.0 docs with requests of type formData to type JSON",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drakumus/SwaggerRequestConverter.git"
+  },
+  "keywords": [
+    "Swagger",
+    "Converter"
+  ],
+  "author": "Rohan Cheeniyil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/drakumus/SwaggerRequestConverter/issues"
+  },
+  "homepage": "https://github.com/drakumus/SwaggerRequestConverter#readme"
+}
