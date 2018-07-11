@@ -1,0 +1,1650 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "canvas.instructure.com",
+    "version": "1.0"
+  },
+  "host": "canvas.instructure.com",
+  "basePath": "/api",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/v1/accounts/{account_id}/self_registration": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "some name",
+            "description": "some description",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "short_name": {
+                      "type": "string"
+                    },
+                    "sortable_name": {
+                      "type": "string"
+                    },
+                    "time_zone": {
+                      "type": "string"
+                    },
+                    "locale": {
+                      "type": "string"
+                    },
+                    "birthdate": {
+                      "type": "string"
+                    },
+                    "terms_of_use": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "terms_of_use"
+                  ]
+                },
+                "pseudonym": {
+                  "properties": {
+                    "unique_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "unique_id"
+                  ]
+                },
+                "communication_channel": {
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "address": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "user",
+                "pseudonym"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "description": "Self register and return a new user and pseudonym for an account.\n\nIf self-registration is enabled on the account, you can use this\nendpoint to self register new users.",
+        "operationId": "self_register_user",
+        "summary": "Self register a user",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/accounts/{account_id}/users": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The partial name or full ID of the users to match and return in the\nresults list. Must be at least 3 characters.\n\nNote that the API will prefer matching on canonical user ID if the ID has\na numeric form. It will only search against other fields if non-numeric\nin form, or if the numeric value doesn't yield any matches. Queries by\nadministrative users will search on SIS ID, login ID, name, or email\naddress; non-administrative queries will only be compared against name.",
+            "in": "query",
+            "name": "search_term",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The column to sort results by.",
+            "enum": [
+              "username",
+              "email",
+              "sis_id",
+              "last_login"
+            ],
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The order to sort the given column by.",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/User"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "description": "A paginated list of of users associated with this account.\n\n @example_request\n   curl https://<canvas>/api/v1/accounts/self/users?search_term=<search value> \\\n      -X GET \\\n      -H 'Authorization: Bearer <token>'",
+        "operationId": "list_users_in_account",
+        "summary": "List users in account"
+      },
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "some name",
+            "description": "some description",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "short_name": {
+                      "type": "string"
+                    },
+                    "sortable_name": {
+                      "type": "string"
+                    },
+                    "time_zone": {
+                      "type": "string"
+                    },
+                    "locale": {
+                      "type": "string"
+                    },
+                    "birthdate": {
+                      "type": "string"
+                    },
+                    "terms_of_use": {
+                      "type": "boolean"
+                    },
+                    "skip_registration": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "pseudonym": {
+                  "properties": {
+                    "unique_id": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "sis_user_id": {
+                      "type": "string"
+                    },
+                    "integration_id": {
+                      "type": "string"
+                    },
+                    "send_confirmation": {
+                      "type": "boolean"
+                    },
+                    "force_self_registration": {
+                      "type": "boolean"
+                    },
+                    "authentication_provider_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "unique_id"
+                  ]
+                },
+                "communication_channel": {
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "address": {
+                      "type": "string"
+                    },
+                    "confirmation_url": {
+                      "type": "boolean"
+                    },
+                    "skip_confirmation": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "force_validations": {
+                  "type": "boolean"
+                },
+                "enable_sis_reactivation": {
+                  "type": "boolean"
+                },
+                "destination": {
+                  "type": "URL"
+                }
+              },
+              "required": [
+                "pseudonym"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "description": "Create and return a new user and pseudonym for an account.\n\nIf you don't have the \"Modify login details for users\" permission, but\nself-registration is enabled on the account, you can still use this\nendpoint to register new users. Certain fields will be required, and\nothers will be ignored (see below).",
+        "operationId": "create_user",
+        "summary": "Create a user",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/users/activity_stream": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Returns the current user's global activity stream, paginated.\n\nThere are many types of objects that can be returned in the activity\nstream. All object types have the same basic set of shared attributes:\n  !!!javascript\n  {\n    'created_at': '2011-07-13T09:12:00Z',\n    'updated_at': '2011-07-25T08:52:41Z',\n    'id': 1234,\n    'title': 'Stream Item Subject',\n    'message': 'This is the body text of the activity stream item. It is plain-text, and can be multiple paragraphs.',\n    'type': 'DiscussionTopic|Conversation|Message|Submission|Conference|Collaboration|AssessmentRequest...',\n    'read_state': false,\n    'context_type': 'course', // course|group\n    'course_id': 1,\n    'group_id': null,\n    'html_url': \"http://...\" // URL to the Canvas web UI for this stream item\n  }\n\nIn addition, each item type has its own set of attributes available.\n\nDiscussionTopic:\n\n  !!!javascript\n  {\n    'type': 'DiscussionTopic',\n    'discussion_topic_id': 1234,\n    'total_root_discussion_entries': 5,\n    'require_initial_post': true,\n    'user_has_posted': true,\n    'root_discussion_entries': {\n      ...\n    }\n  }\n\nFor DiscussionTopic, the message is truncated at 4kb.\n\nAnnouncement:\n\n  !!!javascript\n  {\n    'type': 'Announcement',\n    'announcement_id': 1234,\n    'total_root_discussion_entries': 5,\n    'require_initial_post': true,\n    'user_has_posted': null,\n    'root_discussion_entries': {\n      ...\n    }\n  }\n\nFor Announcement, the message is truncated at 4kb.\n\nConversation:\n\n  !!!javascript\n  {\n    'type': 'Conversation',\n    'conversation_id': 1234,\n    'private': false,\n    'participant_count': 3,\n  }\n\nMessage:\n\n  !!!javascript\n  {\n    'type': 'Message',\n    'message_id': 1234,\n    'notification_category': 'Assignment Graded'\n  }\n\nSubmission:\n\nReturns an {api:Submissions:Submission Submission} with its Course and Assignment data.\n\nConference:\n\n  !!!javascript\n  {\n    'type': 'Conference',\n    'web_conference_id': 1234\n  }\n\nCollaboration:\n\n  !!!javascript\n  {\n    'type': 'Collaboration',\n    'collaboration_id': 1234\n  }\n\nAssessmentRequest:\n\n  !!!javascript\n  {\n    'type': 'AssessmentRequest',\n    'assessment_request_id': 1234\n  }",
+        "operationId": "list_activity_stream_activity_stream",
+        "summary": "List the activity stream"
+      }
+    },
+    "/v1/users/self/activity_stream": {
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Hide all stream items for the user",
+        "operationId": "hide_all_stream_items",
+        "summary": "Hide all stream items"
+      },
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Returns the current user's global activity stream, paginated.\n\nThere are many types of objects that can be returned in the activity\nstream. All object types have the same basic set of shared attributes:\n  !!!javascript\n  {\n    'created_at': '2011-07-13T09:12:00Z',\n    'updated_at': '2011-07-25T08:52:41Z',\n    'id': 1234,\n    'title': 'Stream Item Subject',\n    'message': 'This is the body text of the activity stream item. It is plain-text, and can be multiple paragraphs.',\n    'type': 'DiscussionTopic|Conversation|Message|Submission|Conference|Collaboration|AssessmentRequest...',\n    'read_state': false,\n    'context_type': 'course', // course|group\n    'course_id': 1,\n    'group_id': null,\n    'html_url': \"http://...\" // URL to the Canvas web UI for this stream item\n  }\n\nIn addition, each item type has its own set of attributes available.\n\nDiscussionTopic:\n\n  !!!javascript\n  {\n    'type': 'DiscussionTopic',\n    'discussion_topic_id': 1234,\n    'total_root_discussion_entries': 5,\n    'require_initial_post': true,\n    'user_has_posted': true,\n    'root_discussion_entries': {\n      ...\n    }\n  }\n\nFor DiscussionTopic, the message is truncated at 4kb.\n\nAnnouncement:\n\n  !!!javascript\n  {\n    'type': 'Announcement',\n    'announcement_id': 1234,\n    'total_root_discussion_entries': 5,\n    'require_initial_post': true,\n    'user_has_posted': null,\n    'root_discussion_entries': {\n      ...\n    }\n  }\n\nFor Announcement, the message is truncated at 4kb.\n\nConversation:\n\n  !!!javascript\n  {\n    'type': 'Conversation',\n    'conversation_id': 1234,\n    'private': false,\n    'participant_count': 3,\n  }\n\nMessage:\n\n  !!!javascript\n  {\n    'type': 'Message',\n    'message_id': 1234,\n    'notification_category': 'Assignment Graded'\n  }\n\nSubmission:\n\nReturns an {api:Submissions:Submission Submission} with its Course and Assignment data.\n\nConference:\n\n  !!!javascript\n  {\n    'type': 'Conference',\n    'web_conference_id': 1234\n  }\n\nCollaboration:\n\n  !!!javascript\n  {\n    'type': 'Collaboration',\n    'collaboration_id': 1234\n  }\n\nAssessmentRequest:\n\n  !!!javascript\n  {\n    'type': 'AssessmentRequest',\n    'assessment_request_id': 1234\n  }",
+        "operationId": "list_activity_stream_self",
+        "summary": "List the activity stream"
+      }
+    },
+    "/v1/users/self/activity_stream/summary": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Returns a summary of the current user's global activity stream.",
+        "operationId": "activity_stream_summary",
+        "summary": "Activity stream summary"
+      }
+    },
+    "/v1/users/self/activity_stream/{id}": {
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Hide the given stream item.",
+        "operationId": "hide_stream_item",
+        "summary": "Hide a stream item"
+      }
+    },
+    "/v1/users/self/course_nicknames": {
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Remove all stored course nicknames.",
+        "operationId": "clear_course_nicknames",
+        "summary": "Clear course nicknames"
+      },
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/CourseNickname"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "description": "Returns all course nicknames you have set.",
+        "operationId": "list_course_nicknames",
+        "summary": "List course nicknames"
+      }
+    },
+    "/v1/users/self/course_nicknames/{course_id}": {
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "course_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/CourseNickname"
+            }
+          }
+        },
+        "description": "Remove the nickname for the given course.\nSubsequent course API calls will return the actual name for the course.",
+        "operationId": "remove_course_nickname",
+        "summary": "Remove course nickname"
+      },
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "course_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/CourseNickname"
+            }
+          }
+        },
+        "description": "Returns the nickname for a specific course.",
+        "operationId": "get_course_nickname",
+        "summary": "Get course nickname"
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "course_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "some name",
+            "description": "some description",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nickname": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "nickname"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/CourseNickname"
+            }
+          }
+        },
+        "description": "Set a nickname for the given course. This will replace the course's name\nin output of API calls you make subsequently, as well as in selected\nplaces in the Canvas web user interface.",
+        "operationId": "set_course_nickname",
+        "summary": "Set course nickname",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/users/self/pandata_events_token": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "some name",
+            "description": "some description",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "app_key": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Returns a jwt auth and props token that can be used to send events to\nPandata.\n\nNOTE: This is currently only available to the mobile developer keys.",
+        "operationId": "get_pandata_events_jwt_token_and_its_expiration_date",
+        "summary": "Get a Pandata Events jwt token and its expiration date",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/users/self/todo": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "\"ungraded_quizzes\":: Optionally include ungraded quizzes (such as practice quizzes and surveys) in the list.\n                     These will be returned under a +quiz+ key instead of an +assignment+ key in response elements.",
+            "enum": [
+              "ungraded_quizzes"
+            ],
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "include",
+            "required": false,
+            "type": "array"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "A paginated list of the current user's list of todo items, as seen on the user dashboard.\n\nThere is a limit to the number of items returned.\n\nThe `ignore` and `ignore_permanently` URLs can be used to update the user's\npreferences on what items will be displayed.\nPerforming a DELETE request against the `ignore` URL will hide that item\nfrom future todo item requests, until the item changes.\nPerforming a DELETE request against the `ignore_permanently` URL will hide\nthat item forever.",
+        "operationId": "list_todo_items",
+        "summary": "List the TODO items"
+      }
+    },
+    "/v1/users/self/todo_item_count": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "\"ungraded_quizzes\":: Optionally include ungraded quizzes (such as practice quizzes and surveys) in the list.\n                     These will be returned under a +quiz+ key instead of an +assignment+ key in response elements.",
+            "enum": [
+              "ungraded_quizzes"
+            ],
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "include",
+            "required": false,
+            "type": "array"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Counts of different todo items such as the number of assignments needing grading as well as the number of assignments needing submitting.\n\nThere is a limit to the number of todo items this endpoint will count.\nIt will only look at the first 100 todo items for the user. If the user has more than 100 todo items this count may not be reliable.\nThe largest reliable number for both counts is 100.",
+        "operationId": "list_counts_for_todo_items",
+        "summary": "List counts for todo items"
+      }
+    },
+    "/v1/users/self/upcoming_events": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "A paginated list of the current user's upcoming events, i.e. the same things shown\nin the dashboard 'Coming Up' sidebar.",
+        "operationId": "list_upcoming_assignments_calendar_events",
+        "summary": "List upcoming assignments, calendar events"
+      }
+    },
+    "/v1/users/{id}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "description": "Shows details for user.\n\nAlso includes an attribute \"permissions\", a non-comprehensive list of permissions for the user.\nExample:\n  !!!javascript\n  \"permissions\": {\n   \"can_update_name\": true, // Whether the user can update their name.\n   \"can_update_avatar\": false // Whether the user can update their avatar.\n  }",
+        "operationId": "show_user_details",
+        "summary": "Show user details"
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "some name",
+            "description": "some description",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "short_name": {
+                      "type": "string"
+                    },
+                    "sortable_name": {
+                      "type": "string"
+                    },
+                    "time_zone": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "locale": {
+                      "type": "string"
+                    },
+                    "avatar": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "description": "Modify an existing user. To modify a user's login, see the documentation for logins.",
+        "operationId": "edit_user",
+        "summary": "Edit a user",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/users/{id}/colors": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Returns all custom colors that have been saved for a user.",
+        "operationId": "get_custom_colors",
+        "summary": "Get custom colors"
+      }
+    },
+    "/v1/users/{id}/colors/{asset_string}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "asset_string",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Returns the custom colors that have been saved for a user for a given context.\n\nThe asset_string parameter should be in the format 'context_id', for example\n'course_42'.",
+        "operationId": "get_custom_color",
+        "summary": "Get custom color"
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "asset_string",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "some name",
+            "description": "some description",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "hexcode": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Updates a custom color for a user for a given context.  This allows\ncolors for the calendar and elsewhere to be customized on a user basis.\n\nThe asset string parameter should be in the format 'context_id', for example\n'course_42'",
+        "operationId": "update_custom_color",
+        "summary": "Update custom color",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/users/{id}/dashboard_positions": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Returns all dashboard positions that have been saved for a user.",
+        "operationId": "get_dashboard_positions",
+        "summary": "Get dashboard positions"
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Updates the dashboard positions for a user for a given context.  This allows\npositions for the dashboard cards and elsewhere to be customized on a per\nuser basis.\n\nThe asset string parameter should be in the format 'context_id', for example\n'course_42'",
+        "operationId": "update_dashboard_positions",
+        "summary": "Update dashboard positions"
+      }
+    },
+    "/v1/users/{id}/merge_into/accounts/{destination_account_id}/users/{destination_user_id}": {
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "destination_account_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "destination_user_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "description": "Merge a user into another user.\nTo merge users, the caller must have permissions to manage both users. This\nshould be considered irreversible. This will delete the user and move all\nthe data into the destination user.\n\nWhen finding users by SIS ids in different accounts the\ndestination_account_id is required.\n\nThe account can also be identified by passing the domain in destination_account_id.",
+        "operationId": "merge_user_into_another_user_accounts",
+        "summary": "Merge user into another user"
+      }
+    },
+    "/v1/users/{id}/merge_into/{destination_user_id}": {
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "destination_user_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "description": "Merge a user into another user.\nTo merge users, the caller must have permissions to manage both users. This\nshould be considered irreversible. This will delete the user and move all\nthe data into the destination user.\n\nWhen finding users by SIS ids in different accounts the\ndestination_account_id is required.\n\nThe account can also be identified by passing the domain in destination_account_id.",
+        "operationId": "merge_user_into_another_user_destination_user_id",
+        "summary": "Merge user into another user"
+      }
+    },
+    "/v1/users/{id}/settings": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "If true, require user to manually mark discussion posts as read (don't\nauto-mark as read).",
+            "in": "query",
+            "name": "manual_mark_as_read",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "If true, the user's page loads with the global navigation collapsed",
+            "in": "query",
+            "name": "collapse_global_nav",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Update an existing user's settings.",
+        "operationId": "update_user_settings",
+        "summary": "Update user settings."
+      }
+    },
+    "/v1/users/{id}/split": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/User"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "description": "Merged users cannot be fully restored to their previous state, but this will\nattempt to split as much as possible to the previous state.\nTo split a merged user, the caller must have permissions to manage all of\nthe users logins. If there are multiple users that have been merged into one\nuser it will split each merge into a separate user.\nA split can only happen within 180 days of a user merge. A user merge deletes\nthe previous user and may be permanently deleted. In this scenario we create\na new user object and proceed to move as much as possible to the new user.\nThe user object will not have preserved the name or settings from the\nprevious user. Some items may have been deleted during a user_merge that\ncannot be restored, and/or the data has become stale because of other\nchanges to the objects since the time of the user_merge.",
+        "operationId": "split_merged_users_into_separate_users",
+        "summary": "Split merged users into separate users"
+      }
+    },
+    "/v1/users/{user_id}/avatars": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Avatar"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "description": "A paginated list of the possible user avatar options that can be set with the user update endpoint. The response will be an array of avatar records. If the 'type' field is 'attachment', the record will include all the normal attachment json fields; otherwise it will include only the 'url' and 'display_name' fields. Additionally, all records will include a 'type' field and a 'token' field. The following explains each field in more detail\ntype:: [\"gravatar\"|\"attachment\"|\"no_pic\"] The type of avatar record, for categorization purposes.\nurl:: The url of the avatar\ntoken:: A unique representation of the avatar record which can be used to set the avatar with the user update endpoint. Note: this is an internal representation and is subject to change without notice. It should be consumed with this api endpoint and used in the user update endpoint, and should not be constructed by the client.\ndisplay_name:: A textual description of the avatar record\nid:: ['attachment' type only] the internal id of the attachment\ncontent-type:: ['attachment' type only] the content-type of the attachment\nfilename:: ['attachment' type only] the filename of the attachment\nsize:: ['attachment' type only] the size of the attachment",
+        "operationId": "list_avatar_options",
+        "summary": "List avatar options"
+      }
+    },
+    "/v1/users/{user_id}/custom_data": {
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The namespace from which to delete the data.  This should be something other\nCanvas API apps aren't likely to use, such as a reverse DNS for your organization.",
+            "in": "query",
+            "name": "ns",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Delete custom user data.\n\nArbitrary JSON data can be stored for a User.  This API call\ndeletes that data for a given scope.  Without a scope, all custom_data is deleted.\nSee {api:UsersController#set_custom_data Store Custom Data} for details and\nexamples of storage and retrieval.\n\nAs an example, we'll store some data, then delete a subset of it.\n\nExample {api:UsersController#set_custom_data PUT} with valid JSON data:\n  curl 'https://<canvas>/api/v1/users/<user_id>/custom_data' \\\n    -X PUT \\\n    -F 'ns=com.my-organization.canvas-app' \\\n    -F 'data[fruit][apple]=so tasty' \\\n    -F 'data[fruit][kiwi]=a bit sour' \\\n    -F 'data[veggies][root][onion]=tear-jerking' \\\n    -H 'Authorization: Bearer <token>'\n\nResponse:\n  !!!javascript\n  {\n    \"data\": {\n      \"fruit\": {\n        \"apple\": \"so tasty\",\n        \"kiwi\": \"a bit sour\"\n      },\n      \"veggies\": {\n        \"root\": {\n          \"onion\": \"tear-jerking\"\n        }\n      }\n    }\n  }\n\nExample DELETE:\n  curl 'https://<canvas>/api/v1/users/<user_id>/custom_data/fruit/kiwi' \\\n    -X DELETE \\\n    -F 'ns=com.my-organization.canvas-app' \\\n    -H 'Authorization: Bearer <token>'\n\nResponse:\n  !!!javascript\n  {\n    \"data\": \"a bit sour\"\n  }\n\nExample {api:UsersController#get_custom_data GET} following the above DELETE:\n  curl 'https://<canvas>/api/v1/users/<user_id>/custom_data' \\\n    -X GET \\\n    -F 'ns=com.my-organization.canvas-app' \\\n    -H 'Authorization: Bearer <token>'\n\nResponse:\n  !!!javascript\n  {\n    \"data\": {\n      \"fruit\": {\n        \"apple\": \"so tasty\"\n      },\n      \"veggies\": {\n        \"root\": {\n          \"onion\": \"tear-jerking\"\n        }\n      }\n    }\n  }\n\nNote that hashes left empty after a DELETE will get removed from the custom_data store.\nFor example, following the previous commands, if we delete /custom_data/veggies/root/onion,\nthen the entire /custom_data/veggies scope will be removed.\n\nExample DELETE that empties a parent scope:\n  curl 'https://<canvas>/api/v1/users/<user_id>/custom_data/veggies/root/onion' \\\n    -X DELETE \\\n    -F 'ns=com.my-organization.canvas-app' \\\n    -H 'Authorization: Bearer <token>'\n\nResponse:\n  !!!javascript\n  {\n    \"data\": \"tear-jerking\"\n  }\n\nExample {api:UsersController#get_custom_data GET} following the above DELETE:\n  curl 'https://<canvas>/api/v1/users/<user_id>/custom_data' \\\n    -X GET \\\n    -F 'ns=com.my-organization.canvas-app' \\\n    -H 'Authorization: Bearer <token>'\n\nResponse:\n  !!!javascript\n  {\n    \"data\": {\n      \"fruit\": {\n        \"apple\": \"so tasty\"\n      }\n    }\n  }\n\nOn success, this endpoint returns an object containing the data that was deleted.\n\nResponds with status code 400 if the namespace parameter, +ns+, is missing or invalid,\nor if the specified scope does not contain any data.",
+        "operationId": "delete_custom_data",
+        "summary": "Delete custom data"
+      },
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The namespace from which to retrieve the data.  This should be something other\nCanvas API apps aren't likely to use, such as a reverse DNS for your organization.",
+            "in": "query",
+            "name": "ns",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Load custom user data.\n\nArbitrary JSON data can be stored for a User.  This API call\nretrieves that data for a (optional) given scope.\nSee {api:UsersController#set_custom_data Store Custom Data} for details and\nexamples.\n\nOn success, this endpoint returns an object containing the data that was requested.\n\nResponds with status code 400 if the namespace parameter, +ns+, is missing or invalid,\nor if the specified scope does not contain any data.",
+        "operationId": "load_custom_data",
+        "summary": "Load custom data"
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "some name",
+            "description": "some description",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ns": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "JSON"
+                }
+              },
+              "required": [
+                "ns",
+                "data"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Store arbitrary user data as JSON.\n\nArbitrary JSON data can be stored for a User.\nA typical scenario would be an external site/service that registers users in Canvas\nand wants to capture additional info about them.  The part of the URL that follows\n+/custom_data/+ defines the scope of the request, and it reflects the structure of\nthe JSON data to be stored or retrieved.\n\nThe value +self+ may be used for +user_id+ to store data associated with the calling user.\nIn order to access another user's custom data, you must be an account administrator with\npermission to manage users.\n\nA namespace parameter, +ns+, is used to prevent custom_data collisions between\ndifferent apps.  This parameter is required for all custom_data requests.\n\nA request with Content-Type multipart/form-data or Content-Type\napplication/x-www-form-urlencoded can only be used to store strings.\n\nExample PUT with multipart/form-data data:\n  curl 'https://<canvas>/api/v1/users/<user_id>/custom_data/telephone' \\\n    -X PUT \\\n    -F 'ns=com.my-organization.canvas-app' \\\n    -F 'data=555-1234' \\\n    -H 'Authorization: Bearer <token>'\n\nResponse:\n  !!!javascript\n  {\n    \"data\": \"555-1234\"\n  }\n\nSubscopes (or, generated scopes) can also be specified by passing values to\n+data+[+subscope+].\n\nExample PUT specifying subscopes:\n  curl 'https://<canvas>/api/v1/users/<user_id>/custom_data/body/measurements' \\\n    -X PUT \\\n    -F 'ns=com.my-organization.canvas-app' \\\n    -F 'data[waist]=32in' \\\n    -F 'data[inseam]=34in' \\\n    -F 'data[chest]=40in' \\\n    -H 'Authorization: Bearer <token>'\n\nResponse:\n  !!!javascript\n  {\n    \"data\": {\n      \"chest\": \"40in\",\n      \"waist\": \"32in\",\n      \"inseam\": \"34in\"\n    }\n  }\n\nFollowing such a request, subsets of the stored data to be retrieved directly from a subscope.\n\nExample {api:UsersController#get_custom_data GET} from a generated scope\n  curl 'https://<canvas>/api/v1/users/<user_id>/custom_data/body/measurements/chest' \\\n    -X GET \\\n    -F 'ns=com.my-organization.canvas-app' \\\n    -H 'Authorization: Bearer <token>'\n\nResponse:\n  !!!javascript\n  {\n    \"data\": \"40in\"\n  }\n\nIf you want to store more than just strings (i.e. numbers, arrays, hashes, true, false,\nand/or null), you must make a request with Content-Type application/json as in the following\nexample.\n\nExample PUT with JSON data:\n  curl 'https://<canvas>/api/v1/users/<user_id>/custom_data' \\\n    -H 'Content-Type: application/json' \\\n    -X PUT \\\n    -d '{\n          \"ns\": \"com.my-organization.canvas-app\",\n          \"data\": {\n            \"a-number\": 6.02e23,\n            \"a-bool\": true,\n            \"a-string\": \"true\",\n            \"a-hash\": {\"a\": {\"b\": \"ohai\"}},\n            \"an-array\": [1, \"two\", null, false]\n          }\n        }' \\\n    -H 'Authorization: Bearer <token>'\n\nResponse:\n  !!!javascript\n  {\n    \"data\": {\n      \"a-number\": 6.02e+23,\n      \"a-bool\": true,\n      \"a-string\": \"true\",\n      \"a-hash\": {\n        \"a\": {\n          \"b\": \"ohai\"\n        }\n      },\n      \"an-array\": [1, \"two\", null, false]\n    }\n  }\n\nIf the data is an Object (as it is in the above example), then subsets of the data can\nbe accessed by including the object's (possibly nested) keys in the scope of a GET request.\n\nExample {api:UsersController#get_custom_data GET} with a generated scope:\n  curl 'https://<canvas>/api/v1/users/<user_id>/custom_data/a-hash/a/b' \\\n    -X GET \\\n    -F 'ns=com.my-organization.canvas-app' \\\n    -H 'Authorization: Bearer <token>'\n\nResponse:\n  !!!javascript\n  {\n    \"data\": \"ohai\"\n  }\n\n\nOn success, this endpoint returns an object containing the data that was stored.\n\nResponds with status code 200 if the scope already contained data, and it was overwritten\nby the data specified in the request.\n\nResponds with status code 201 if the scope was previously empty, and the data specified\nin the request was successfully stored there.\n\nResponds with status code 400 if the namespace parameter, +ns+, is missing or invalid, or if\nthe +data+ parameter is missing.\n\nResponds with status code 409 if the requested scope caused a conflict and data was not stored.\nThis happens when storing data at the requested scope would cause data at an outer scope\nto be lost.  e.g., if +/custom_data+ was +{\"fashion_app\": {\"hair\": \"blonde\"}}+, but\nyou tried to +`PUT /custom_data/fashion_app/hair/style -F data=buzz`+, then for the request\nto succeed,the value of +/custom_data/fashion_app/hair+ would have to become a hash, and its\nold string value would be lost.  In this situation, an error object is returned with the\nfollowing format:\n\n  !!!javascript\n  {\n    \"message\": \"write conflict for custom_data hash\",\n    \"conflict_scope\": \"fashion_app/hair\",\n    \"type_at_conflict\": \"String\",\n    \"value_at_conflict\": \"blonde\"\n  }",
+        "operationId": "store_custom_data",
+        "summary": "Store custom data",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/v1/users/{user_id}/files": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Upload a file to the user's personal files section.\n\nThis API endpoint is the first step in uploading a file to a user's files.\nSee the {file:file_uploads.html File Upload Documentation} for details on\nthe file upload workflow.\n\nNote that typically users will only be able to upload files to their\nown files section. Passing a user_id of +self+ is an easy shortcut\nto specify the current user.",
+        "operationId": "upload_file",
+        "summary": "Upload a file"
+      }
+    },
+    "/v1/users/{user_id}/missing_submissions": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "the student's ID",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "\"planner_overrides\":: Optionally include the assignment's associated planner override, if it exists, for the current user.\n                      These will be returned under a +planner_override+ key\n\"course\":: Optionally include the assignments' courses",
+            "enum": [
+              "planner_overrides",
+              "course"
+            ],
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "include",
+            "required": false,
+            "type": "array"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Assignment"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "description": "A paginated list of past-due assignments for which the student does not have a submission.\nThe user sending the request must either be an admin or a parent observer using the parent app",
+        "operationId": "list_missing_submissions",
+        "summary": "List Missing Submissions"
+      }
+    },
+    "/v1/users/{user_id}/page_views": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The beginning of the time range from which you want page views.",
+            "format": "date-time",
+            "in": "query",
+            "name": "start_time",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The end of the time range from which you want page views.",
+            "format": "date-time",
+            "in": "query",
+            "name": "end_time",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/PageView"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "description": "Return a paginated list of the user's page view history in json format,\nsimilar to the available CSV download. Page views are returned in\ndescending order, newest to oldest.",
+        "operationId": "list_user_page_views",
+        "summary": "List user page views"
+      }
+    },
+    "/v1/users/{user_id}/profile": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/Profile"
+            }
+          }
+        },
+        "description": "Returns user profile data, including user id, name, and profile pic.\n\nWhen requesting the profile for the user accessing the API, the user's\ncalendar feed URL and LTI user id will be returned as well.",
+        "operationId": "get_user_profile",
+        "summary": "Get user profile"
+      }
+    }
+  },
+  "definitions": {
+    "Avatar": {
+      "description": "Possible avatar for a user.",
+      "properties": {
+        "content-type": {
+          "description": "['attachment' type only] the content-type of the attachment.",
+          "example": "image/jpeg",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "A textual description of the avatar record.",
+          "example": "user, sample",
+          "type": "string"
+        },
+        "filename": {
+          "description": "['attachment' type only] the filename of the attachment",
+          "example": "profile.jpg",
+          "type": "string"
+        },
+        "id": {
+          "description": "['attachment' type only] the internal id of the attachment",
+          "example": 12,
+          "type": "integer"
+        },
+        "size": {
+          "description": "['attachment' type only] the size of the attachment",
+          "example": 32649,
+          "type": "integer"
+        },
+        "token": {
+          "description": "A unique representation of the avatar record which can be used to set the avatar with the user update endpoint. Note: this is an internal representation and is subject to change without notice. It should be consumed with this api endpoint and used in the user update endpoint, and should not be constructed by the client.",
+          "example": "<opaque_token>",
+          "type": "string"
+        },
+        "type": {
+          "description": "['gravatar'|'attachment'|'no_pic'] The type of avatar record, for categorization purposes.",
+          "example": "gravatar",
+          "type": "string"
+        },
+        "url": {
+          "description": "The url of the avatar",
+          "example": "https://secure.gravatar.com/avatar/2284...",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url",
+        "token",
+        "display_name"
+      ]
+    },
+    "CourseNickname": {
+      "properties": {
+        "course_id": {
+          "description": "the ID of the course",
+          "example": 88,
+          "type": "integer"
+        },
+        "name": {
+          "description": "the actual name of the course",
+          "example": "S1048576 DPMS1200 Intro to Newtonian Mechanics",
+          "type": "string"
+        },
+        "nickname": {
+          "description": "the calling user's nickname for the course",
+          "example": "Physics",
+          "type": "string"
+        }
+      }
+    },
+    "PageView": {
+      "description": "The record of a user page view access in Canvas",
+      "properties": {
+        "action": {
+          "description": "The rails action that handled the request",
+          "example": "index",
+          "type": "string"
+        },
+        "app_name": {
+          "description": "If the request is from an API request, the app that generated the access token",
+          "example": "Canvas for iOS",
+          "type": "string"
+        },
+        "asset_type": {
+          "description": "The type of asset in the context for the request, if any",
+          "example": "Discussion",
+          "type": "string"
+        },
+        "context_type": {
+          "description": "The type of context for the request",
+          "example": "Course",
+          "type": "string"
+        },
+        "contributed": {
+          "description": "This field is deprecated, and will always be false",
+          "example": "false",
+          "type": "boolean"
+        },
+        "controller": {
+          "description": "The rails controller that handled the request",
+          "example": "discussions",
+          "type": "string"
+        },
+        "created_at": {
+          "description": "When the request was made",
+          "example": "2013-10-01T19:49:47Z",
+          "format": "iso8601",
+          "type": "string"
+        },
+        "http_method": {
+          "description": "The HTTP method such as GET or POST",
+          "example": "GET",
+          "type": "string"
+        },
+        "id": {
+          "description": "A UUID representing the page view.  This is also the unique request id",
+          "example": "3e246700-e305-0130-51de-02e33aa501ef",
+          "format": "uuid",
+          "type": "string"
+        },
+        "interaction_seconds": {
+          "description": "An approximation of how long the user spent on the page, in seconds",
+          "example": "7.21",
+          "type": "number"
+        },
+        "links": {
+          "$ref": "#/definitions/PageViewLinks",
+          "description": "The page view links to define the relationships",
+          "example": {
+            "account": 1234,
+            "user": 1234
+          }
+        },
+        "participated": {
+          "description": "True if the request counted as participating, such as submitting homework",
+          "example": "false",
+          "type": "boolean"
+        },
+        "remote_ip": {
+          "description": "The origin IP address of the request",
+          "example": "173.194.46.71",
+          "type": "string"
+        },
+        "render_time": {
+          "description": "How long the response took to render, in seconds",
+          "example": "0.369",
+          "type": "number"
+        },
+        "url": {
+          "description": "The URL requested",
+          "example": "https://canvas.instructure.com/conversations",
+          "type": "string"
+        },
+        "user_agent": {
+          "description": "The user-agent of the browser or program that made the request",
+          "example": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/536.30.1 (KHTML, like Gecko) Version/6.0.5 Safari/536.30.1",
+          "type": "string"
+        },
+        "user_request": {
+          "description": "A flag indicating whether the request was user-initiated, or automatic (such as an AJAX call)",
+          "example": "true",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "PageViewLinks": {
+      "description": "The links of a page view access in Canvas",
+      "properties": {
+        "account": {
+          "description": "The ID of the account context for this page view",
+          "example": "1234",
+          "format": "int64",
+          "type": "integer"
+        },
+        "asset": {
+          "description": "The ID of the asset for the request, if any",
+          "example": "1234",
+          "format": "int64",
+          "type": "integer"
+        },
+        "context": {
+          "description": "The ID of the context for the request (course id if context_type is Course, etc)",
+          "example": "1234",
+          "format": "int64",
+          "type": "integer"
+        },
+        "real_user": {
+          "description": "The ID of the actual user who made this request, if the request was made by a user who was masquerading",
+          "example": "1234",
+          "format": "int64",
+          "type": "integer"
+        },
+        "user": {
+          "description": "The ID of the user for this page view",
+          "example": "1234",
+          "format": "int64",
+          "type": "integer"
+        }
+      }
+    },
+    "Profile": {
+      "description": "Profile details for a Canvas user.",
+      "properties": {
+        "avatar_url": {
+          "description": "The avatar_url can change over time, so we recommend not caching it for more than a few hours",
+          "example": "..url..",
+          "type": "string"
+        },
+        "bio": {
+          "type": "string"
+        },
+        "calendar": {
+          "$ref": "#/definitions/CalendarLink"
+        },
+        "id": {
+          "description": "The ID of the user.",
+          "example": 1234,
+          "type": "integer"
+        },
+        "locale": {
+          "description": "The users locale.",
+          "type": "string"
+        },
+        "login_id": {
+          "description": "sample_user@example.com",
+          "example": "sample_user@example.com",
+          "type": "string"
+        },
+        "lti_user_id": {
+          "type": "string"
+        },
+        "name": {
+          "description": "Sample User",
+          "example": "Sample User",
+          "type": "string"
+        },
+        "primary_email": {
+          "description": "sample_user@example.com",
+          "example": "sample_user@example.com",
+          "type": "string"
+        },
+        "short_name": {
+          "description": "Sample User",
+          "example": "Sample User",
+          "type": "string"
+        },
+        "sis_user_id": {
+          "description": "sis1",
+          "example": "sis1",
+          "type": "string"
+        },
+        "sortable_name": {
+          "description": "user, sample",
+          "example": "user, sample",
+          "type": "string"
+        },
+        "time_zone": {
+          "description": "Optional: This field is only returned in certain API calls, and will return the IANA time zone name of the user's preferred timezone.",
+          "example": "America/Denver",
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "description": "A Canvas user, e.g. a student, teacher, administrator, observer, etc.",
+      "properties": {
+        "avatar_url": {
+          "description": "If avatars are enabled, this field will be included and contain a url to retrieve the user's avatar.",
+          "example": "https://en.gravatar.com/avatar/d8cb8c8cd40ddf0cd05241443a591868?s=80&r=g",
+          "type": "string"
+        },
+        "bio": {
+          "description": "Optional: The user's bio.",
+          "example": "I like the Muppets.",
+          "type": "string"
+        },
+        "email": {
+          "description": "Optional: This field can be requested with certain API calls, and will return the users primary email address.",
+          "example": "sheldon@caltech.example.com",
+          "type": "string"
+        },
+        "enrollments": {
+          "description": "Optional: This field can be requested with certain API calls, and will return a list of the users active enrollments. See the List enrollments API for more details about the format of these records.",
+          "items": {
+            "$ref": "#/definitions/Enrollment"
+          },
+          "type": "array"
+        },
+        "id": {
+          "description": "The ID of the user.",
+          "example": 2,
+          "format": "int64",
+          "type": "integer"
+        },
+        "integration_id": {
+          "description": "The integration_id associated with the user.  This field is only included if the user came from a SIS import and has permissions to view SIS information.",
+          "example": "ABC59802",
+          "type": "string"
+        },
+        "last_login": {
+          "description": "Optional: This field is only returned in certain API calls, and will return a timestamp representing the last time the user logged in to canvas.",
+          "example": "2012-05-30T17:45:25Z",
+          "format": "date-time",
+          "type": "string"
+        },
+        "locale": {
+          "description": "Optional: This field can be requested with certain API calls, and will return the users locale in RFC 5646 format.",
+          "example": "tlh",
+          "type": "string"
+        },
+        "login_id": {
+          "description": "The unique login id for the user.  This is what the user uses to log in to Canvas.",
+          "example": "sheldon@caltech.example.com",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the user.",
+          "example": "Sheldon Cooper",
+          "type": "string"
+        },
+        "short_name": {
+          "description": "A short name the user has selected, for use in conversations or other less formal places through the site.",
+          "example": "Shelly",
+          "type": "string"
+        },
+        "sis_import_id": {
+          "description": "The id of the SIS import.  This field is only included if the user came from a SIS import and has permissions to manage SIS information.",
+          "example": "18",
+          "format": "int64",
+          "type": "integer"
+        },
+        "sis_user_id": {
+          "description": "The SIS ID associated with the user.  This field is only included if the user came from a SIS import and has permissions to view SIS information.",
+          "example": "SHEL93921",
+          "type": "string"
+        },
+        "sortable_name": {
+          "description": "The name of the user that is should be used for sorting groups of users, such as in the gradebook.",
+          "example": "Cooper, Sheldon",
+          "type": "string"
+        },
+        "time_zone": {
+          "description": "Optional: This field is only returned in certain API calls, and will return the IANA time zone name of the user's preferred timezone.",
+          "example": "America/Denver",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "UserDisplay": {
+      "description": "This mini-object is used for secondary user responses, when we just want to provide enough information to display a user.",
+      "properties": {
+        "avatar_image_url": {
+          "description": "If avatars are enabled, this field will be included and contain a url to retrieve the user's avatar.",
+          "example": "https://en.gravatar.com/avatar/d8cb8c8cd40ddf0cd05241443a591868?s=80&r=g",
+          "type": "string"
+        },
+        "html_url": {
+          "description": "URL to access user, either nested to a context or directly.",
+          "example": "https://school.instructure.com/courses/:course_id/users/:user_id",
+          "type": "string"
+        },
+        "id": {
+          "description": "The ID of the user.",
+          "example": 2,
+          "format": "int64",
+          "type": "integer"
+        },
+        "short_name": {
+          "description": "A short name the user has selected, for use in conversations or other less formal places through the site.",
+          "example": "Shelly",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

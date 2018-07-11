@@ -1,0 +1,1 @@
+const swaggerSpecValidator = require('swagger-spec-validator');

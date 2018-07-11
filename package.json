@@ -19,5 +19,11 @@
   "bugs": {
     "url": "https://github.com/drakumus/SwaggerRequestConverter/issues"
   },
-  "homepage": "https://github.com/drakumus/SwaggerRequestConverter#readme"
+  "homepage": "https://github.com/drakumus/SwaggerRequestConverter#readme",
+  "dependencies": {
+    "api-spec-converter": "^2.7.8",
+    "jsonfile": "^4.0.0",
+    "node-fetch": "^2.1.2",
+    "swagger-spec-validator": "^3.0.0"
+  }
 }
