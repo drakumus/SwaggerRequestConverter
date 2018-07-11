@@ -7,6 +7,6 @@ Select an endpoint and generate the Swagger Doc for JSON parameters in requests 
 
 # TODO
 
--Improve Readme
--Make more modular
--Add tests
+* Improve Readme
+* Make more modular
+* Add tests
