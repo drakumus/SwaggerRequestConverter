@@ -3,7 +3,7 @@ const FS = require('fs');
 const fetch = require('node-fetch');
 var endpoint = `account_notifications`
 
-function convertCanvasEndpoint(endpoint) {
+/*function convertCanvasEndpoint(endpoint) {
   Converter.convert({
     from: 'swagger_1',
     to: 'swagger_2',
@@ -11,7 +11,7 @@ function convertCanvasEndpoint(endpoint) {
   }).then(function(converted) {
     // converted.fillMissing();
     
-    return converted.validate()
+    converted.validate()
       .then(function (result) {
         //if (result.errors)
         //  return console.error(JSON.stringify(errors, null, 2));
@@ -21,6 +21,17 @@ function convertCanvasEndpoint(endpoint) {
         FS.writeFileSync(`swagger_endpoints/form_data/${endpoint}.json`, converted.stringify());
       });
   });
+} */
+
+async function convertCanvasEndpoint(endpoint) {
+  var converted = await Converter.convert({
+    from: 'swagger_1',
+    to: 'swagger_2',
+    source: `https://canvas.instructure.com/doc/api/${endpoint}.json`
+  });
+
+  var validationResult = await converted.validate();
+  FS.writeFileSync(`swagger_endpoints/form_data/${endpoint}.json`, converted.stringify());
 }
 
 /**
@@ -210,7 +221,7 @@ function convertParamFormToJson(parameterArray)
   return parameters;
 }
 
-async function convertFormToJson(swaggerDoc) {
+function convertFormToJson(swaggerDoc) {
   // cycle through each path and get relavent parse relavent method parameters
   Object.keys(swaggerDoc.paths).forEach(function(path) {
     Object.keys(swaggerDoc.paths[path]).forEach(function(method) {
