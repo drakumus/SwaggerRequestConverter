@@ -1,13 +1,14 @@
 const Converter = require('api-spec-converter');
 const FS = require('fs');
 const fetch = require('node-fetch');
-var endpoint = `account_notifications`
+var endpoint = `account_reports`
 
-/*function convertCanvasEndpoint(endpoint) {
+
+function convertCanvas() {
   Converter.convert({
     from: 'swagger_1',
     to: 'swagger_2',
-    source: `https://canvas.instructure.com/doc/api/${endpoint}.json`
+    source: `./swagger_endpoints/api-docs.json`
   }).then(function(converted) {
     // converted.fillMissing();
     
@@ -18,10 +19,11 @@ var endpoint = `account_notifications`
         //if (result.warnings)
         //  return console.error(JSON.stringify(warnings, null, 2));
 
-        FS.writeFileSync(`swagger_endpoints/form_data/${endpoint}.json`, converted.stringify());
+        FS.writeFileSync(`swagger_endpoints/form_data/api-docs.json`, converted.stringify());
       });
   });
-} */
+}
+
 
 async function convertCanvasEndpoint(endpoint) {
   var converted = await Converter.convert({
@@ -75,7 +77,7 @@ function getParameters(path, method, json)
  * Request schema format
  * "post":
  * {
- *  "consumes": "application/json"
+ *  "consumes": ["application/json"]
  *  "parameters":
  *  {
  *    "in": "body"
@@ -101,15 +103,16 @@ function getParameters(path, method, json)
  * @param {Array} parameterArray Array of parameters for a path with formData
  * @returns {Array} Returns an array of converted parameters (path and json)
  */
-function convertParamFormToJson(parameterArray)
+function convertParamFormToJson(parameterArray, path)
 {
   var parameters = []
-
+  //var name = path.match(/[a-zA-Z_]+(?!\/)$/)[0];
+  //TODO: fix name and description
   var jsonParam = 
   {
     "in": "body",
-    "name": "some name",
-    "description": "some description",
+    "name": "name",
+    "description": `JSON object for ${path}`,
     "schema":
     {
       "type": "object",
@@ -117,6 +120,7 @@ function convertParamFormToJson(parameterArray)
     }
   }
 
+  //make this crap recursive
   parameterArray.forEach(function(parameter)
   {
     if(parameter.in === "formData")
@@ -132,7 +136,7 @@ function convertParamFormToJson(parameterArray)
         
         // --properties
         // check to see if the properties subfied of the given objectName already exists, if it does not then initialize it
-        if(jsonParam.schema.properties[objectName] == undefined || jsonParam.schema.properties[objectName] == null)
+        if(jsonParam.schema.properties[objectName] == undefined || jsonParam.schema.properties[objectName] == null || jsonParam.schema.properties[objectName] === {})
         {
           jsonParam.schema.properties[objectName] =
           {
@@ -142,6 +146,10 @@ function convertParamFormToJson(parameterArray)
         
         var propertyName = parameter.name.match(/(?<=\[)[a-z_A-Z]+(?=\])/)[0];
         
+        // helpful debugging prints
+        //console.log(JSON.stringify(jsonParam));
+        //console.log(`${objectName} ${propertyName}`);
+        //console.log(jsonParam.schema.properties[objectName]);
         jsonParam.schema.properties[objectName].properties[propertyName] = 
         {
           "type": parameter["type"]
@@ -179,6 +187,11 @@ function convertParamFormToJson(parameterArray)
           jsonParam.schema.properties[objectName].properties[propertyName]["enum"] = parameter.enum;
         }
         
+        // --description
+        if(parameter.description != undefined || parameter.description != null)
+        {
+          jsonParam.schema.properties[objectName].properties[propertyName]["description"] = parameter.description;
+        }
       } else 
       {
         // --properties
@@ -206,13 +219,16 @@ function convertParamFormToJson(parameterArray)
         {
           jsonParam.schema.properties[parameter.name]["enum"] = parameter.enum;
         }
+
+        // --description
+        if(parameter.description != undefined || parameter.description != null)
+        {
+          jsonParam.schema.properties[parameter.name]["description"] = parameter.description;
+        }
       }
-    } else if(parameter.in === "path")
-    {
-      parameters.push(parameter);
     } else
     {
-      throw new Error("unhandled parameter type");
+      parameters.push(parameter);
     }
 
   });
@@ -222,20 +238,28 @@ function convertParamFormToJson(parameterArray)
 }
 
 function convertFormToJson(swaggerDoc) {
+
+  var bad_endpoints = ["/v1/accounts/{account_id}/reports/{report}",
+                      "/v1/accounts/{account_id}/reports/{report}",
+                      "/v1/calendar_events/{id}",
+                      "/v1/calendar_events",
+                      "/v1/courses/{course_id}/calendar_events/timetable_events"]
   // cycle through each path and get relavent parse relavent method parameters
   Object.keys(swaggerDoc.paths).forEach(function(path) {
-    Object.keys(swaggerDoc.paths[path]).forEach(function(method) {
-      // get the parameters for a method that has form data
-      var parameters = getParameters(path, method, swaggerDoc);
-      if(parameters != undefined || parameters != null)
-      {
-        swaggerDoc.paths[path][method]["consumes"] = ["application/json"]
-        // convert the provided formData params to a JSON param
-        var jsonParameters = convertParamFormToJson(parameters);
-        // replace the formData params with the new JSON param
-        swaggerDoc.paths[path][method].parameters = jsonParameters;
-      }
-    });
+    if(!bad_endpoints.includes(path)){
+      Object.keys(swaggerDoc.paths[path]).forEach(function(method) {
+        // get the parameters for a method that has form data
+        var parameters = getParameters(path, method, swaggerDoc);
+        if((parameters != undefined || parameters != null))
+        {
+          swaggerDoc.paths[path][method]["consumes"] = ["application/json"]
+          // convert the provided formData params to a JSON param
+          var jsonParameters = convertParamFormToJson(parameters, path);
+          // replace the formData params with the new JSON param
+          swaggerDoc.paths[path][method].parameters = jsonParameters;
+        }
+      });
+    }
   });
   return swaggerDoc;
 }
@@ -252,7 +276,20 @@ async function convertFormDataCanvasEndpoint(endpoint) {
   return swaggerDoc;
 }
 
+async function convertFormDataCanvas() {
+  await convertCanvas();
+  
+  const file = `./swagger_endpoints/form_data/api-docs.json`;
+  var itter = 0;
+  var swaggerDoc = require(file);
+  
+  var swaggerDoc = await convertFormToJson(swaggerDoc);
+  FS.writeFileSync(`swagger_endpoints/json/api-docs.json`, JSON.stringify(swaggerDoc, null, 2));
+  return swaggerDoc;
+}
+
 // working
-// convertCanvasEndpoint(endpoint);
+//convertCanvasEndpoint(endpoint);
 //convertFormDataCanvasEndpoint(endpoint)
-convertFormDataCanvasEndpoint(endpoint).then(result => console.log(JSON.stringify(result)));
+convertFormDataCanvas();//.then(result => console.log(JSON.stringify(result)));
+//convertFormDataCanvasEndpoint(endpoint).then(result => console.log(JSON.stringify(result)));

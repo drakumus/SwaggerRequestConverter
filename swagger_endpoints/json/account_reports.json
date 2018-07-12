@@ -1,0 +1,376 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "canvas.instructure.com",
+    "version": "1.0"
+  },
+  "host": "canvas.instructure.com",
+  "basePath": "/api",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/v1/accounts/{account_id}/reports": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "description": "Returns a paginated list of reports for the current context.",
+        "operationId": "list_available_reports",
+        "summary": "List Available Reports"
+      }
+    },
+    "/v1/accounts/{account_id}/reports/{report}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "report",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Report"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "description": "Shows all reports that have been run for the account of a specific type.",
+        "operationId": "index_of_reports",
+        "summary": "Index of Reports"
+      },
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "report",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The parameters will vary for each report. To fetch a list\nof available parameters for each report, see {api:AccountReportsController#available_reports List Available Reports}.\nA few example parameters have been provided below. Note that the example\nparameters provided below may not be valid for every report.",
+            "in": "formData",
+            "name": "parameters",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The id of the course to report on.\nNote: this parameter has been listed to serve as an example and may not be\nvalid for every report.",
+            "format": "int64",
+            "in": "formData",
+            "name": "parameters[course_id]",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "description": "If true, user data will be included. If\nfalse, user data will be omitted. Note: this parameter has been listed to\nserve as an example and may not be valid for every report.",
+            "in": "formData",
+            "name": "parameters[users]",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/Report"
+            }
+          }
+        },
+        "description": "Generates a report instance for the account. Note that \"report\" in the\nrequest must match one of the available report names. To fetch a list of\navailable report names and parameters for each report (including whether or\nnot those parameters are required), see\n{api:AccountReportsController#available_reports List Available Reports}.",
+        "operationId": "start_report",
+        "summary": "Start a Report"
+      }
+    },
+    "/v1/accounts/{account_id}/reports/{report}/{id}": {
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "report",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/Report"
+            }
+          }
+        },
+        "description": "Deletes a generated report instance.",
+        "operationId": "delete_report",
+        "summary": "Delete a Report"
+      },
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "report",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/Report"
+            }
+          }
+        },
+        "description": "Returns the status of a report.",
+        "operationId": "status_of_report",
+        "summary": "Status of a Report"
+      }
+    }
+  },
+  "definitions": {
+    "Report": {
+      "properties": {
+        "parameters": {
+          "$ref": "#/definitions/ReportParameters",
+          "description": "The report parameters",
+          "example": {
+            "course_id": 2,
+            "end_at": "2012-07-13T10:55:20-06:00",
+            "start_at": "2012-07-13T10:55:20-06:00"
+          }
+        },
+        "attachment": {
+          "description": "The attachment api object of the report. Only available after the report has completed.",
+          "type": "file"
+        },
+        "created_at": {
+          "description": "The date and time the report was created.",
+          "example": "2013-12-01T23:59:00-06:00",
+          "format": "date-time",
+          "type": "string"
+        },
+        "current_line": {
+          "description": "This is the current line count being written to the report. It updates every 1000 records.",
+          "example": "12000",
+          "type": "integer"
+        },
+        "ended_at": {
+          "description": "The date and time the report finished processing.",
+          "example": "2013-12-02T00:03:21-06:00",
+          "format": "date-time",
+          "type": "string"
+        },
+        "file_url": {
+          "description": "The url to the report download.",
+          "example": "https://example.com/some/path",
+          "type": "string"
+        },
+        "id": {
+          "description": "The unique identifier for the report.",
+          "example": "1",
+          "type": "integer"
+        },
+        "progress": {
+          "description": "The progress of the report",
+          "example": "100",
+          "type": "integer"
+        },
+        "report": {
+          "description": "The type of report.",
+          "example": "sis_export_csv",
+          "type": "string"
+        },
+        "started_at": {
+          "description": "The date and time the report started processing.",
+          "example": "2013-12-02T00:03:21-06:00",
+          "format": "date-time",
+          "type": "string"
+        },
+        "status": {
+          "description": "The status of the report",
+          "example": "complete",
+          "type": "string"
+        }
+      }
+    },
+    "ReportParameters": {
+      "description": "The parameters returned will vary for each report.",
+      "properties": {
+        "accounts": {
+          "description": "If true, account data will be included. If false, account data will be omitted.",
+          "example": false,
+          "type": "boolean"
+        },
+        "course_id": {
+          "description": "The id of the course to report on",
+          "example": 2,
+          "type": "integer"
+        },
+        "courses": {
+          "description": "If true, course data will be included. If false, course data will be omitted.",
+          "example": false,
+          "type": "boolean"
+        },
+        "end_at": {
+          "description": "The end date for submissions. Max time range is 2 weeks.",
+          "example": "2012-07-13T10:55:20-06:00",
+          "format": "date-time",
+          "type": "string"
+        },
+        "enrollment_state": {
+          "description": "Include enrollment state. Defaults to 'all' Options: ['active'| 'invited'| 'creation_pending'| 'deleted'| 'rejected'| 'completed'| 'inactive'| 'all']",
+          "example": [
+            "all"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "enrollment_term_id": {
+          "description": "The canvas id of the term to get grades from",
+          "example": 2,
+          "type": "integer"
+        },
+        "enrollments": {
+          "description": "If true, enrollment data will be included. If false, enrollment data will be omitted.",
+          "example": false,
+          "type": "boolean"
+        },
+        "groups": {
+          "description": "If true, group data will be included. If false, group data will be omitted.",
+          "example": false,
+          "type": "boolean"
+        },
+        "include_deleted": {
+          "description": "If true, deleted objects will be included. If false, deleted objects will be omitted.",
+          "example": false,
+          "type": "boolean"
+        },
+        "include_enrollment_state": {
+          "description": "If true, enrollment state will be included. If false, enrollment state will be omitted. Defaults to false.",
+          "example": false,
+          "type": "boolean"
+        },
+        "order": {
+          "description": "The sort order for the csv, Options: 'users', 'courses', 'outcomes'.",
+          "example": "users",
+          "type": "string"
+        },
+        "sections": {
+          "description": "If true, section data will be included. If false, section data will be omitted.",
+          "example": false,
+          "type": "boolean"
+        },
+        "sis_accounts_csv": {
+          "example": 1,
+          "type": "integer"
+        },
+        "sis_terms_csv": {
+          "example": 1,
+          "type": "integer"
+        },
+        "start_at": {
+          "description": "The beginning date for submissions. Max time range is 2 weeks.",
+          "example": "2012-07-13T10:55:20-06:00",
+          "format": "date-time",
+          "type": "string"
+        },
+        "terms": {
+          "description": "If true, term data will be included. If false, term data will be omitted.",
+          "example": false,
+          "type": "boolean"
+        },
+        "users": {
+          "description": "If true, user data will be included. If false, user data will be omitted.",
+          "example": false,
+          "type": "boolean"
+        },
+        "xlist": {
+          "description": "If true, data for crosslisted courses will be included. If false, data for crosslisted courses will be omitted.",
+          "example": false,
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
