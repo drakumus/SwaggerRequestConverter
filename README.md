@@ -8,5 +8,8 @@ Select an endpoint and generate the Swagger Doc for JSON parameters in requests 
 # TODO
 
 * Improve Readme
+* Add Example for conversion
+* Feature flag for handling oneOf
+* convert for Swagger 3.0 docs
 * Make more modular
 * Add tests
